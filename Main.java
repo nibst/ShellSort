@@ -38,7 +38,7 @@ public class Main {
         List<Integer> arr2 = new ArrayList<>();
         File saida1 = null;
         File saida2 = null;
-
+        int print_ok;//flag para printar durante shell sort ou nao
 
         try {
             saida1 = new File("./saida1.txt");
@@ -68,8 +68,7 @@ public class Main {
         PrintWriter printWriter1 = new PrintWriter(fileWriter1);
         PrintWriter printWriter2 = new PrintWriter(fileWriter2);
 
-        int arrSize = 0, i, j, k;
-        int indexOfArrSize = 0;
+
         //pega os paths
         try {
             //path da primeira entrada
@@ -96,29 +95,43 @@ public class Main {
 
 
         //PARTE 1 DO EXERCICIO-FAZ O SORT E CRIA FILE saida1.txt (cada linha tem um passo do sorting)
-        //lines1.size() são quantos arrays tem que fazer sorting na entrada1
-        for (i = 0; i < lines1.size(); i++) {
+
+        print_ok = 1;//flag ativada para printar as etapas do shell sort
+        extracted(sortWithShell, sortWithKnuth, sortWithCiura, lines1, arr, arr1, arr2, print_ok, printWriter1, tokens1);
+        printWriter1.close();
+
+        //PARTE 2 DO EXERCICIO - MOSTRA O TEMPO QUE PASSOU EM CADA SHELL SORT USANDO DIFERENTES SEQUENCIAS
+        print_ok = 0;
+        extracted(sortWithShell, sortWithKnuth, sortWithCiura, lines2, arr, arr1, arr2, print_ok, printWriter2, tokens2);
+        printWriter2.close();
+
+    }
+
+    private static void extracted(ShellSort sortWithShell, ShellSort sortWithKnuth, ShellSort sortWithCiura, List<String> lines, List<Integer> arr, List<Integer> arr1, List<Integer> arr2, int print_ok, PrintWriter printWriter, String[] tokens) {
+        int arrSize;
+        int j;
+        int i;
+        int indexOfArrSize = 0;
+        //lines1.size() são quantos arrays tem que fazer sorting na entrada
+        for (i = 0; i < lines.size(); i++) {
             //indexOfArrSize é 0 no inicio, inicializado na declaracao
-            arrSize = Integer.parseInt(tokens1[indexOfArrSize]);
+            arrSize = Integer.parseInt(tokens[indexOfArrSize]);
             //preenche as listas com os numeros do arquivo de entrada
             for (j = indexOfArrSize + 1; j < indexOfArrSize + arrSize + 1; j++) {
-                arr.add(Integer.parseInt(tokens1[j]));
-                arr1.add(Integer.parseInt(tokens1[j]));
-                arr2.add(Integer.parseInt(tokens1[j]));
+                arr.add(Integer.parseInt(tokens[j]));
+                arr1.add(Integer.parseInt(tokens[j]));
+                arr2.add(Integer.parseInt(tokens[j]));
             }
             indexOfArrSize = indexOfArrSize + arrSize + 1;
 
-            sortWithShell.shellSort(arr, arrSize, printWriter1);
-            sortWithKnuth.shellSort(arr1, arrSize, printWriter1);
-            sortWithCiura.shellSort(arr2, arrSize, printWriter1);
+            sortWithShell.shellSort(arr, arrSize, printWriter, print_ok);
+            sortWithKnuth.shellSort(arr1, arrSize, printWriter, print_ok);
+            sortWithCiura.shellSort(arr2, arrSize, printWriter, print_ok);
 
             arr.clear();
             arr1.clear();
             arr2.clear();
             System.out.print("\n");
         }
-        printWriter1.close();
-        printWriter2.close();
-
     }
 }
