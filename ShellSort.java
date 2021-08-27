@@ -54,9 +54,11 @@ public class ShellSort {
         //quero o ultimo elemento da sequencia q seja menor que arrSize
         return i - 1;
     }
-    public void printTime(){
+
+    public void printTime() {
 
     }
+
     public void printArray(List<Integer> arr, int arrSize, int gap, PrintWriter printWriter) throws IOException {
 
         int i;
@@ -76,13 +78,11 @@ public class ShellSort {
                 printWriter.print(s);
                 printWriter.print(" ");
             }
-
             printWriter.print("INCR-");
             printWriter.print(gap);
             printWriter.println("");
         }
         printWriter.flush();
-
     }
 
     public void insDiretaShellsort(List<Integer> arr, int arrSize, int gap, int startingCell) {
@@ -100,23 +100,40 @@ public class ShellSort {
         }
     }
 
-    public void shellSort(List<Integer> arr, int arrSize, PrintWriter printWriter) {
+    public void shellSort(List<Integer> arr, int arrSize, PrintWriter printWriter, int print_ok) {
         int gapIndex, gap, i;
+        double start = 0, finish, totalTime;
 
         //inicializar ele como 0 para que na primeira linha de escrever o array, escreva o nome da sequencia ao lado
         gap = 0;
         int[] seq = getSequence();
-        try {
-            printArray(arr, arrSize, gap, printWriter);
-        } catch (IOException e) {
-            System.exit(1);
+        if (print_ok == 1) {
+            try {
+                printArray(arr, arrSize, gap, printWriter);
+            } catch (IOException e) {
+                System.exit(1);
+            }
         }
+
         gapIndex = chooseArrayFirstDivider(arrSize);
+        if (print_ok == 0)
+            start = System.nanoTime();
+
         for (; gapIndex >= 0; gapIndex--) {
             gap = seq[gapIndex];
             for (i = 0; i < gap; i++) {
                 insDiretaShellsort(arr, arrSize, gap, i);
             }
+
+        }
+        if (print_ok == 0) {
+            finish = System.nanoTime();
+            totalTime = finish - start;
+            //converter nanosegundos para segundos
+            totalTime = totalTime / 1000000000;
+            printWriter.printf(sequenceName + "," + arrSize + "," + "%.9f\n",totalTime);
+        }
+        if (print_ok == 1) {
             try {
                 printArray(arr, arrSize, gap, printWriter);
             } catch (IOException e) {
